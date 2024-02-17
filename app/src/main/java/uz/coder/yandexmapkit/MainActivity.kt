@@ -1,11 +1,15 @@
 package uz.coder.yandexmapkit
 
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.core.app.ActivityCompat
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.map.CameraPosition
+import com.yandex.runtime.bindings.Archive
+import com.yandex.runtime.bindings.internal.ArchiveWriter
 import uz.coder.yandexmapkit.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -22,8 +26,25 @@ class MainActivity : AppCompatActivity() {
                 Point(
                     41.589938, 60.608070),
             11.0f,0.0f,0.0f),
-            Animation(Animation.Type.SMOOTH,300f),null
+            Animation(Animation.Type.SMOOTH,10f),null
         )
+        val instance = MapKitFactory.getInstance()
+        requestPermission()
+        val trafficLayer = instance.createTrafficLayer(binding.mapview.mapWindow)
+        var trafficBoolean = false
+        binding.traffic.setOnClickListener {
+            trafficBoolean = !trafficBoolean
+            trafficLayer.isTrafficVisible = trafficBoolean
+        }
+        val locationLayer = instance.createUserLocationLayer(binding.mapview.mapWindow)
+        locationLayer.isVisible = true
+    }
+
+    private fun requestPermission() {
+        if (ActivityCompat.checkSelfPermission(this@MainActivity,android.Manifest.permission.ACCESS_COARSE_LOCATION)==PackageManager.PERMISSION_DENIED && ActivityCompat.checkSelfPermission(this@MainActivity,android.Manifest.permission.ACCESS_FINE_LOCATION)==PackageManager.PERMISSION_DENIED ){
+            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION,android.Manifest.permission.ACCESS_FINE_LOCATION),1)
+        }
+        return
     }
 
     override fun onStart() {
