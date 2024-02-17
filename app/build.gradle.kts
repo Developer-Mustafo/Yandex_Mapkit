@@ -33,10 +33,15 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    buildFeatures{
+    viewBinding =  true
+    }
 }
 
 dependencies {
-
+    /***************Yandex Mapkit*****************/
+    implementation("com.yandex.android:maps.mobile:4.1.0-full")
+    /***************Yandex Mapkit*****************/
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")
